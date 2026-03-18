@@ -41,6 +41,10 @@ Wenn die CLAUDE.md Inhalt hat, lies die ersten Zeilen und schlage einen passende
 > "2. Einen bestehenden Agenten als Coach nutzen"
 > "3. Ohne eigenen Ordner — der Coach nutzt das Root-Verzeichnis"
 
+Dann fragen:
+> "Wie soll der Coach heißen? Ein kreativer Name macht die Diskussionen lebendiger."
+> Schlage 2-3 passende Namen vor, z.B. "Max Moderator", "Facilitator Faye", "Coach Carter".
+
 Bei Option 1: Erstelle einen Ordner (z.B. `coach/`) mit einer CLAUDE.md die die Moderator-Rolle beschreibt.
 
 ### Schritt 5: Farben zuweisen
