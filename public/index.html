@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sharp sharp AI — Team Chat</title>
-  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>Agent Team Chat</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,13 +12,13 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div class="sidebar-header">
-        <img class="sidebar-avatar" src="/favicon.png" alt="sharp sharp AI">
-        <span class="sidebar-title">sharp sharp AI</span>
+        <div class="sidebar-icon">💬</div>
+        <span class="sidebar-title">Agent Chat</span>
       </div>
       <div class="sidebar-topic">
-        <div class="sidebar-section-title">Thema</div>
-        <textarea id="topic-input" placeholder="Worüber sollen die Agenten diskutieren?"></textarea>
-        <button id="btn-go" class="go-btn" disabled>Los geht's</button>
+        <div class="sidebar-section-title">Topic</div>
+        <textarea id="topic-input" placeholder="What should the agents discuss?"></textarea>
+        <button id="btn-go" class="go-btn" disabled>Start Discussion</button>
       </div>
       <div class="sidebar-agents" id="agent-toggles"></div>
     </aside>
@@ -27,9 +27,9 @@
     <main id="chat">
       <!-- Header -->
       <header id="chat-header">
-        <div class="header-avatar" style="background: #075E54">🤖</div>
+        <div class="header-avatar" style="background: #075E54">💬</div>
         <div class="header-info">
-          <div class="header-name">sharp sharp AI Team</div>
+          <div class="header-name">Agent Team Chat</div>
           <div class="header-participants" id="header-participants"></div>
         </div>
         <div class="header-actions">
@@ -46,7 +46,7 @@
             <svg class="pause-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
             <svg class="play-icon hidden" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           </button>
-          <button id="btn-auto" class="header-pill auto-inactive" data-tooltip="Auto-Modus"><span class="small-caps">Auto</span></button>
+          <button id="btn-auto" class="header-pill auto-inactive" data-tooltip="Auto"><span class="small-caps">Auto</span></button>
           <button id="btn-feedback" class="header-pill" data-tooltip="Feedback">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </button>
@@ -56,7 +56,7 @@
       <!-- Messages -->
       <div id="messages">
         <div class="system-message">
-          <span>Schreib eine Nachricht, um die Diskussion zu starten 👇</span>
+          <span>Type a message to start the discussion 👇</span>
         </div>
       </div>
 
@@ -79,9 +79,9 @@
       <!-- Input -->
       <footer id="input-bar">
         <div class="input-wrapper">
-          <textarea id="message-input" placeholder="Nachricht eingeben..." rows="1"></textarea>
+          <textarea id="message-input" placeholder="Type a message..." rows="1"></textarea>
         </div>
-        <button id="btn-action" class="action-btn" title="Senden / Weiter">
+        <button id="btn-action" class="action-btn" title="Send / Continue">
           <svg class="icon-send" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"></path></svg>
           <svg class="icon-play hidden" viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
         </button>

@@ -121,7 +121,7 @@ function addMessage(from, text, role) {
   const msg = {
     id: messages.length,
     from,
-    name: from === 'sebastian' ? 'Sebastian' : (AGENTS[from]?.name || from),
+    name: from === 'sebastian' ? (config.userName || 'You') : (AGENTS[from]?.name || from),
     text,
     role: role || from,
     time: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
@@ -223,8 +223,8 @@ STIL: Du schreibst wie in einem WhatsApp-Gruppenchat — kurz, direkt, freundlic
 REGELN:
 - Beende NICHT zu früh mit FAZIT. Wenn es offene Abhängigkeiten, ungeklärte Punkte oder Widersprüche zwischen Agenten gibt, bohre nach.
 - Stelle sicher, dass JEDER Agent mindestens einmal dran war, bevor du FAZIT in Betracht ziehst.
-- Wenn alle Agenten gesprochen haben und keine offenen Punkte mehr da sind, frage Sebastian nach seinem Input (→ SEBASTIAN), bevor du abschließt.
-- FAZIT nur wenn Sebastian explizit sagt "reicht" oder wirklich alles geklärt ist.
+- Wenn alle Agenten gesprochen haben und keine offenen Punkte mehr da sind, frage den User nach seinem Input (→ SEBASTIAN), bevor du abschließt.
+- FAZIT nur wenn der User explizit sagt "reicht" oder wirklich alles geklärt ist.
 - THEMEN-MANAGEMENT: Wenn die Diskussion zu einem neuen Thema wechselt, schließe das alte erst ab (WRAP) bevor du das neue eröffnest (TOPIC).
 - Wenn ein Thema ausdiskutiert ist und es noch weitere Punkte gibt, mach einen WRAP und dann TOPIC für das nächste.
 
@@ -233,29 +233,41 @@ WICHTIG: Beende deine Antwort mit genau einer Direktive auf der ALLERLETZTEN Zei
 → PROBE: <agenten-id> (Nachfrage an einen bestimmten Agenten)
 → TOPIC: <Thema-Name> (Neues Thema eröffnen)
 → WRAP: <Thema-Name> (Aktuelles Thema abschließen — NUR wenn ausdiskutiert)
-→ SEBASTIAN (Frage/Rücksprache mit Sebastian)
-→ FAZIT (NUR wenn alles geklärt UND Sebastian zugestimmt hat)`;
+→ SEBASTIAN (Frage/Rücksprache mit dem User)
+→ FAZIT (NUR wenn alles geklärt UND der User zugestimmt hat)`;
 
   return runClaude(COACH_DIR, prompt);
 }
 
 async function runAgent(agentId) {
   const a = AGENTS[agentId];
+  const coachName = AGENTS[COACH_ID]?.name || 'Coach';
   const teamMembers = activeAgents.map(id => `- ${AGENTS[id].name}`).join('\n');
 
-  const prompt = `Du bist ${a.name} und nimmst an einem WhatsApp-Gruppenchat des sharp sharp AI Teams teil.
+  // Check if agent has real context
+  let agentContext = '';
+  const claudeMd = path.join(ROOT, a.dir, 'CLAUDE.md');
+  if (fs.existsSync(claudeMd)) {
+    agentContext = fs.readFileSync(claudeMd, 'utf-8').trim();
+  }
+  const hasContext = agentContext.length > 20;
+
+  const contextWarning = hasContext
+    ? ''
+    : `\n\nWICHTIG: Deine CLAUDE.md ist leer oder minimal. Du hast noch keinen definierten Aufgabenbereich. Sage ehrlich, dass du noch keinen Kontext hast und frage, was deine Rolle sein soll. Erfinde KEINE Aufgaben, Abhängigkeiten oder Projekte. Halluziniere nicht.\n`;
+
+  const prompt = `Du bist ${a.name} und nimmst an einem Gruppenchat teil.
 
 ## Dein Team
 ${teamMembers}
-- Felix Facilitrix (Agile Coach / Moderator)
-- Sebastian (Chef)
+- ${coachName} (Moderator)
 
 ## Bisherige Unterhaltung
 ${buildConversationText()}
 
 ## Deine Aufgabe
 Lies was zuletzt gesagt wurde und antworte darauf. Sei konkret, bring deine Perspektive ein.
-
+${contextWarning}
 STIL: Du schreibst wie in WhatsApp — kurz, locker, direkt. Keine Formalitäten, kein Corporate-Speak. Emojis sparsam aber natürlich. Max 150 Wörter. Wenn du was nicht weißt, sag das ehrlich.
 WICHTIG: Du heißt ${a.name}. Verwende die Teamnamen oben, keine anderen.
 

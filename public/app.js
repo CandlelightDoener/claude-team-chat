@@ -587,6 +587,25 @@ function renderAgentToggles() {
 
     agentToggles.appendChild(group);
   }
+
+  // If coach is not in any team, show separately
+  const coachInTeam = teams.some(t => t.members.includes(coachId));
+  if (!coachInTeam && agents[coachId]) {
+    const agent = agents[coachId];
+    const div = document.createElement('div');
+    div.className = 'agent-toggle';
+    div.style.padding = '8px 16px';
+    const avatarHtml = agent.avatar
+      ? `<img src="${agent.avatar}" alt="${agent.name}">`
+      : agent.name.charAt(0);
+    div.innerHTML = `
+      <div class="agent-toggle-avatar" style="background: ${agent.color}33">${avatarHtml}</div>
+      <div class="agent-toggle-name">${agent.name} <span style="color: var(--wa-text-secondary); font-size: 11px">${agent.role}</span></div>
+      <div class="agent-toggle-check active" data-agent-check="${coachId}">✓</div>
+    `;
+    agentToggles.appendChild(div);
+  }
+
   updateCheckmarks();
 }
 
