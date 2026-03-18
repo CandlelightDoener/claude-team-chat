@@ -99,8 +99,8 @@ let sseClients = [];
 let isProcessing = false;
 let autoMode = false;
 let paused = false;
-let pendingSebastianMsg = null;
-let waitingForSebastian = false;
+let pendingUserMsg = null;
+let waitingForUser = false;
 let activeAgents = config.activeAgents || Object.keys(config.agents);
 let lastCoachResponse = '';
 
@@ -207,7 +207,7 @@ ${kontextSection}
 ## Teilnehmende Agenten — DIESE NAMEN VERWENDEN
 ${agentNameList}
 
-WICHTIG: Verwende AUSSCHLIESSLICH die oben gelisteten Namen. Keine alten Namen wie "Rina" oder "Hedi".
+WICHTIG: Verwende AUSSCHLIESSLICH die oben gelisteten Namen.
 
 ## Agenten-Profile (Hintergrund)
 ${agentProfiles}
@@ -313,17 +313,17 @@ function stripDirective(text) {
 
 async function nextStep() {
   // Zentrale Entscheidung: was passiert als nächstes?
-  if (pendingSebastianMsg) {
-    pendingSebastianMsg = null;
-    waitingForSebastian = false;
+  if (pendingUserMsg) {
+    pendingUserMsg = null;
+    waitingForUser = false;
     await orchestrate('sebastian');
   } else if (paused) {
     broadcast('status', { processing: false, paused: true });
-  } else if (waitingForSebastian && !autoMode) {
-    // Coach hat Sebastian gefragt — warten bis er antwortet
-    broadcast('status', { processing: false, waitingForSebastian: true });
+  } else if (waitingForUser && !autoMode) {
+    // Coach hat den User gefragt — warten bis er antwortet
+    broadcast('status', { processing: false, waitingForUser: true });
   } else {
-    waitingForSebastian = false;
+    waitingForUser = false;
     await orchestrate('continue');
   }
 }
@@ -380,7 +380,7 @@ function hasStarted() {
 async function orchestrate(triggerType) {
   if (isProcessing) return;
   if (!hasStarted()) {
-    // Keine Diskussion ohne Sebastians erste Nachricht
+    // Keine Diskussion ohne erste User-Nachricht
     broadcast('status', { processing: false });
     return;
   }
@@ -391,11 +391,11 @@ async function orchestrate(triggerType) {
     let instruction;
     if (triggerType === 'start') {
       const namen = activeAgents.map(id => AGENTS[id].name).join(', ');
-      instruction = `Eröffne die Diskussion. Die Teilnehmer sind: ${namen}. Sebastian hat gerade eine Nachricht geschickt — lies sie und starte das Gespräch. Halte dich kurz.`;
+      instruction = `Eröffne die Diskussion. Die Teilnehmer sind: ${namen}. Der User hat gerade eine Nachricht geschickt — lies sie und starte das Gespräch. Halte dich kurz.`;
     } else if (triggerType === 'continue') {
       instruction = `Die Diskussion läuft. Entscheide: Wer soll als nächstes sprechen? Oder reicht es für ein Fazit? Reagiere kurz auf das Bisherige und gib dann deine Direktive.`;
     } else if (triggerType === 'sebastian') {
-      instruction = `Sebastian hat sich gerade eingeschaltet. Sein Input steht als letzter Beitrag. Reagiere darauf und steuere die Diskussion weiter.`;
+      instruction = `Der User hat sich gerade eingeschaltet. Sein Input steht als letzter Beitrag. Reagiere darauf und steuere die Diskussion weiter.`;
     } else {
       instruction = triggerType;
     }
@@ -473,9 +473,9 @@ async function orchestrate(triggerType) {
       broadcast('status', { finished: true, allTopics: completedTopics });
 
     } else if (directive.type === 'SEBASTIAN') {
-      waitingForSebastian = true;
-      if (pendingSebastianMsg) {
-        // Sebastian hat schon was geschrieben
+      waitingForUser = true;
+      if (pendingUserMsg) {
+        // User hat schon was geschrieben
         await sleep(500);
         isProcessing = false;
         await nextStep();
@@ -483,14 +483,14 @@ async function orchestrate(triggerType) {
       }
       if (autoMode) {
         // Auto-Modus: nicht warten
-        waitingForSebastian = false;
+        waitingForUser = false;
         await sleep(1000);
         isProcessing = false;
         await nextStep();
         return;
       }
       // Manuell: wirklich warten — Pause-resistent
-      broadcast('status', { waitingForSebastian: true });
+      broadcast('status', { waitingForUser: true });
 
     } else {
       // UNKNOWN directive — Sicherheitsstopp statt Endlosschleife
@@ -554,7 +554,7 @@ const server = http.createServer(async (req, res) => {
     const data = body ? JSON.parse(body) : {};
 
     if (url.pathname === '/api/message') {
-      // Sebastian sends a message
+      // User sends a message
       const msg = addMessage('sebastian', data.text, 'sebastian');
       paused = false;
       const isFirst = messages.filter(m => m.from === 'sebastian').length === 1;
@@ -579,7 +579,7 @@ const server = http.createServer(async (req, res) => {
         }
       }
       if (isProcessing) {
-        pendingSebastianMsg = data.text;
+        pendingUserMsg = data.text;
       } else {
         orchestrate(isFirst ? 'start' : 'sebastian');
       }

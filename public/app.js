@@ -119,7 +119,7 @@ function connect() {
       // Show meeting wrap-up with all approved items
       setTimeout(() => showMeetingWrapup(), 500);
     }
-    if (data.waitingForSebastian) {
+    if (data.waitingForUser) {
       appendSystemMessage('Coach wartet auf deine Antwort...');
     }
   });
