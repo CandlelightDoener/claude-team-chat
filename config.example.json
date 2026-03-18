@@ -1,0 +1,37 @@
+{
+  "port": 3333,
+  "root": "..",
+  "contextFile": "",
+  "feedbackUrl": "",
+  "coach": {
+    "id": "coach",
+    "name": "Coach",
+    "role": "Moderator",
+    "dir": "coach",
+    "color": "#A78BFA"
+  },
+  "agents": {
+    "alice": {
+      "name": "Alice Analytics",
+      "role": "Data & Metrics",
+      "dir": "analytics",
+      "color": "#00A884"
+    },
+    "bob": {
+      "name": "Bob Builder",
+      "role": "Frontend & UI",
+      "dir": "frontend",
+      "color": "#FF6B6B"
+    },
+    "carol": {
+      "name": "Carol Content",
+      "role": "Copy & Marketing",
+      "dir": "content",
+      "color": "#53BDEB"
+    }
+  },
+  "teams": [
+    { "id": "product", "name": "Product Team", "members": ["alice", "bob", "carol"] }
+  ],
+  "activeAgents": ["alice", "bob", "carol"]
+}

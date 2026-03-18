@@ -1,0 +1,11 @@
+{
+  "name": "claude-team-chat",
+  "version": "1.0.0",
+  "description": "WhatsApp-style chat UI for moderated discussions between Claude Code agents",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["claude", "ai-agents", "multi-agent", "chat", "team", "claude-code"],
+  "license": "MIT",
+  "dependencies": {}
+}

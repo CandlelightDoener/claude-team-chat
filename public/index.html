@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sharp sharp AI — Team Chat</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <img class="sidebar-avatar" src="/favicon.png" alt="sharp sharp AI">
+        <span class="sidebar-title">sharp sharp AI</span>
+      </div>
+      <div class="sidebar-topic">
+        <div class="sidebar-section-title">Thema</div>
+        <textarea id="topic-input" placeholder="Worüber sollen die Agenten diskutieren?"></textarea>
+        <button id="btn-go" class="go-btn" disabled>Los geht's</button>
+      </div>
+      <div class="sidebar-agents" id="agent-toggles"></div>
+    </aside>
+
+    <!-- Main Chat -->
+    <main id="chat">
+      <!-- Header -->
+      <header id="chat-header">
+        <div class="header-avatar" style="background: #075E54">🤖</div>
+        <div class="header-info">
+          <div class="header-name">sharp sharp AI Team</div>
+          <div class="header-participants" id="header-participants"></div>
+        </div>
+        <div class="header-actions">
+          <button id="btn-action-items" class="header-pill" data-tooltip="Action Items">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </button>
+          <button id="btn-summary" class="header-pill" data-tooltip="Summary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="2" x2="12" y2="6"/></svg>
+          </button>
+          <button id="btn-download" class="header-pill" data-tooltip="Download">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button id="btn-pause" class="header-pill" data-tooltip="Pause">
+            <svg class="pause-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+            <svg class="play-icon hidden" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button id="btn-auto" class="header-pill auto-inactive" data-tooltip="Auto-Modus"><span class="small-caps">Auto</span></button>
+          <button id="btn-feedback" class="header-pill" data-tooltip="Feedback">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Messages -->
+      <div id="messages">
+        <div class="system-message">
+          <span>Schreib eine Nachricht, um die Diskussion zu starten 👇</span>
+        </div>
+      </div>
+
+      <!-- Paused indicator -->
+      <div id="paused-indicator" class="hidden">
+        <span class="small-caps">Paused</span>
+      </div>
+
+      <!-- Typing indicator -->
+      <div id="typing-indicator" class="hidden">
+        <div class="typing-avatar" id="typing-avatar"></div>
+        <div class="typing-bubble">
+          <div class="typing-name" id="typing-name"></div>
+          <div class="typing-dots">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <footer id="input-bar">
+        <div class="input-wrapper">
+          <textarea id="message-input" placeholder="Nachricht eingeben..." rows="1"></textarea>
+        </div>
+        <button id="btn-action" class="action-btn" title="Senden / Weiter">
+          <svg class="icon-send" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z"></path></svg>
+          <svg class="icon-play hidden" viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+        </button>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
